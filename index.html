@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>tiny projects</title>
+<link rel="icon" id="favicon" type="image/png" href="">
+<style>
+  body {
+    margin: 0;
+    padding: 12px;
+    font-family: "Times New Roman", Times, serif;
+  }
+  .label {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    font-size: 10px;
+    color: #000;
+    z-index: 1;
+  }
+  .links {
+    position: fixed;
+    top: 33vh;
+    left: 12px;
+    font-size: 12px;
+    z-index: 2;
+  }
+  a {
+    color: #0000ee;
+  }
+  a:visited {
+    color: #0000ee;
+  }
+</style>
+</head>
+<body>
+<div class="label">tiny projects</div>
+<div class="links">
+  <a href="https://idyllwild.netlify.app/" target="_blank" rel="noopener noreferrer">release 00001</a><br><br>
+  <a href="https://tinyprojects.fun/" target="_blank" rel="noopener noreferrer">release 00002</a><br><br>
+  <a href="https://acorn-lane-geocities.netlify.app/" target="_blank" rel="noopener noreferrer">release 00003</a><br><br>
+  <a href="https://tiny-push.netlify.app/" target="_blank" rel="noopener noreferrer">release 00004</a>
+</div>
+<script>
+  var colors = ["#e8e2d4", "#d4c8b0", "#c9d4c0", "#d0c4d8", "#d8c4b8", "#c4d0d8", "#e0d0c8", "#c8d8c4", "#d8d0c0", "#ccc4d4"];
+  var bgColor = colors[Math.floor(Math.random() * colors.length)];
+  document.body.style.backgroundColor = bgColor;
+
+  function generateFavicon(bg, font) {
+    var size = 32;
+    var canvas = document.createElement("canvas");
+    canvas.width = size;
+    canvas.height = size;
+    var ctx = canvas.getContext("2d");
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, size, size);
+    ctx.fillStyle = "#000000";
+    ctx.font = "bold 26px " + font;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("T", size / 2, size / 2 + 2);
+    document.getElementById("favicon").href = canvas.toDataURL("image/png");
+  }
+
+  var fonts = [
+    { name: "'Times New Roman', Times, serif", weight: 1 },
+    { name: "'Courier New', Courier, monospace", weight: 1 },
+    { name: "Georgia, serif", weight: 1 },
+    { name: "'Comic Sans MS', cursive", weight: 1 },
+    { name: "Impact, sans-serif", weight: 1 },
+    { name: "'Trebuchet MS', sans-serif", weight: 1 },
+    { name: "Verdana, sans-serif", weight: 1 },
+    { name: "'Brush Script MT', cursive", weight: 1 },
+    { name: "Arial, sans-serif", weight: 1 },
+    { name: "'Lucida Console', monospace", weight: 1 },
+    { name: "Papyrus, fantasy", weight: 0.3 },
+    { name: "'Zapf Dingbats', fantasy", weight: 1 },
+    { name: "Webdings", weight: 1 },
+    { name: "Wingdings", weight: 1 },
+    { name: "'Copperplate', fantasy", weight: 1 },
+    { name: "'Bradley Hand', cursive", weight: 1 },
+    { name: "'Chalkboard', fantasy", weight: 1 },
+    { name: "'Marker Felt', fantasy", weight: 1 },
+    { name: "'Haettenschweiler', sans-serif", weight: 1 },
+    { name: "'Curlz MT', fantasy", weight: 1 },
+    { name: "Jokerman, fantasy", weight: 1 },
+    { name: "Algerian, fantasy", weight: 1 },
+    { name: "'Monotype Corsiva', cursive", weight: 1 }
+  ];
+  var totalWeight = fonts.reduce(function (sum, f) { return sum + f.weight; }, 0);
+  var pick = Math.random() * totalWeight;
+  var chosenFont = fonts[0].name;
+  for (var i = 0; i < fonts.length; i++) {
+    pick -= fonts[i].weight;
+    if (pick <= 0) {
+      chosenFont = fonts[i].name;
+      break;
+    }
+  }
+  document.querySelector(".label").style.fontFamily = chosenFont;
+  generateFavicon(bgColor, chosenFont);
+
+  var minSize = 1;
+  var maxSize = Math.min(Math.max(window.innerWidth, window.innerHeight) * 2, 4000);
+  var bias = Math.pow(Math.random(), 4);
+  var size = minSize + (maxSize - minSize) * bias;
+  var label = document.querySelector(".label");
+  label.style.fontSize = size + "px";
+  label.style.whiteSpace = "nowrap";
+  label.style.lineHeight = "1";
+
+  var REFRESH_MIN_MS = 3000;
+  var REFRESH_MAX_MS = 10000;
+  var refreshTimer = null;
+
+  function scheduleRefresh() {
+    if (refreshTimer) {
+      clearTimeout(refreshTimer);
+    }
+    var delay = Math.random() * (REFRESH_MAX_MS - REFRESH_MIN_MS) + REFRESH_MIN_MS;
+    refreshTimer = setTimeout(function () {
+      if (document.visibilityState === "visible") {
+        window.location.reload();
+      } else {
+        // tab is hidden / computer asleep - don't reload blind, wait for it to come back
+        scheduleRefresh();
+      }
+    }, delay);
+  }
+
+  document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === "visible") {
+      scheduleRefresh();
+    } else if (refreshTimer) {
+      clearTimeout(refreshTimer);
+      refreshTimer = null;
+    }
+  });
+
+  scheduleRefresh();
+</script>
+</body>
+</html>
