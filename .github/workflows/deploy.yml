@@ -17,7 +17,7 @@ jobs:
         with:
           username: ${{ secrets.SFTP_USERNAME }}
           password: ${{ secrets.SFTP_PASSWORD }}
-          server: 69.163.181.251
+          server: pdx1-shared-a1-21.dreamhost.com
           port: 22
           local_path: './*'
           remote_path: 'tinyprojects.fun/'
